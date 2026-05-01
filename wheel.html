@@ -387,9 +387,20 @@
   const CY = SIZE / 2;
   const R = SIZE / 2 - 12;
 
+  const DEFAULT_DATES = (() => {
+    const dates = ['APR 30'];
+    for (let d = 1; d <= 24; d++) dates.push(`MAY ${d}`);
+    return dates;
+  })();
+
   let state = loadState();
   let rotation = 0;
   let spinning = false;
+
+  if (state.entries.length === 0 && state.winners.length === 0 && !state.lastSpin) {
+    state.entries = [...DEFAULT_DATES];
+    saveState();
+  }
 
   function loadState() {
     try {
