@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Romantic Tour — Daily Wheel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0A0A0A;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+  .container { max-width: 1240px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 50px; }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    letter-spacing: 0.18em;
+    color: #FFFFFF;
+  }
+  .gold-line {
+    width: 60px;
+    height: 1px;
+    background: #922933;
+    margin: 18px auto;
+  }
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: #922933;
+    letter-spacing: 0.08em;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .panel {
+    background: #0F0F0F;
+    border: 1px solid #1A1A1A;
+    padding: 24px;
+    border-radius: 2px;
+  }
+  .panel h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: #922933;
+    letter-spacing: 0.22em;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1A1A1A;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 220px;
+    background: #060606;
+    color: #fff;
+    border: 1px solid #222;
+    padding: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  textarea:focus { outline: none; border-color: #922933; }
+
+  button {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #922933;
+    padding: 10px 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.18em;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    width: 100%;
+    margin-top: 10px;
+  }
+  button:hover:not(:disabled) { background: #922933; }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-secondary {
+    border-color: #2A2A2A;
+    color: #888;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: #1A1A1A;
+    color: #fff;
+    border-color: #333;
+  }
+
+  .wheel-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .wheel-wrapper {
+    position: relative;
+    width: 520px;
+    height: 520px;
+  }
+  canvas { display: block; }
+  .pointer {
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-right: 34px solid #922933;
+    z-index: 2;
+    filter: drop-shadow(-2px 0 6px rgba(146,41,51,0.7));
+  }
+  .center-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2a0d11, #050505 70%);
+    border: 2px solid #922933;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: #922933;
+    letter-spacing: 0.16em;
+    box-shadow: 0 0 20px rgba(146,41,51,0.3) inset;
+    pointer-events: none;
+  }
+
+  .spin-btn {
+    margin-top: 36px;
+    padding: 18px 70px;
+    font-size: 18px;
+    width: auto;
+    background: #922933;
+    border-color: #922933;
+    letter-spacing: 0.25em;
+  }
+  .spin-btn:hover:not(:disabled) {
+    background: #b8333f;
+    border-color: #b8333f;
+    box-shadow: 0 0 30px rgba(146,41,51,0.5);
+  }
+
+  .winners-list {
+    list-style: none;
+    max-height: 460px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+  }
+  .winners-list::-webkit-scrollbar { width: 4px; }
+  .winners-list::-webkit-scrollbar-thumb { background: #1A1A1A; }
+  .winners-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #1A1A1A;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .winners-list .left { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+  .winners-list .num {
+    color: #922933;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+  .winners-list .name {
+    color: #fff;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .winners-list .date {
+    color: #777;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .empty {
+    color: #444;
+    font-style: italic;
+    font-size: 13px;
+    text-align: center;
+    padding: 30px 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #0A0A0A;
+    border: 1px solid #922933;
+    padding: 60px 80px;
+    text-align: center;
+    max-width: 540px;
+    box-shadow: 0 0 60px rgba(146,41,51,0.5);
+    animation: modalIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .modal .label {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #922933;
+    letter-spacing: 0.12em;
+    font-size: 14px;
+  }
+  .modal .gold-line { margin: 18px auto; }
+  .modal .winner-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+    margin: 6px 0 18px;
+    color: #fff;
+  }
+  .modal .meta {
+    color: #888;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .modal button { margin-top: 32px; max-width: 200px; }
+
+  .daily-status {
+    background: #1A0606;
+    border: 1px solid #922933;
+    padding: 12px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 11px;
+    color: #d97a83;
+    letter-spacing: 0.14em;
+    font-family: 'Bebas Neue', sans-serif;
+    display: none;
+  }
+  .daily-status.show { display: block; }
+
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #1A1A1A;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: #922933;
+    letter-spacing: 0.04em;
+  }
+  .stat .lbl {
+    font-size: 10px;
+    color: #666;
+    letter-spacing: 0.16em;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  /* Confetti particles */
+  .confetti {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99;
+    overflow: hidden;
+  }
+  .confetti span {
+    position: absolute;
+    width: 8px;
+    height: 14px;
+    top: -20px;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); }
+  }
+
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+    .wheel-wrapper { width: 100%; max-width: 420px; aspect-ratio: 1; height: auto; }
+    canvas { width: 100%; height: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SPIN THE WHEEL</h1>
+    <div class="gold-line"></div>
+    <div class="subtitle">— A Daily Drawing —</div>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Entries</h2>
+      <div id="dailyStatus" class="daily-status"></div>
+      <textarea id="entriesInput" placeholder="One name per line"></textarea>
+      <button id="saveBtn" class="btn-secondary">Save Entries</button>
+      <button id="loadCitiesBtn" class="btn-secondary">Load Tour Cities</button>
+    </div>
+
+    <div class="wheel-stage">
+      <div class="wheel-wrapper">
+        <canvas id="wheel" width="520" height="520"></canvas>
+        <div class="pointer"></div>
+        <div class="center-hub">SPIN</div>
+      </div>
+      <button id="spinBtn" class="spin-btn">SPIN</button>
+    </div>
+
+    <div class="panel">
+      <h2>Winners</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="num" id="statWinners">0</div>
+          <div class="lbl">Wins</div>
+        </div>
+        <div class="stat">
+          <div class="num" id="statRemaining">0</div>
+          <div class="lbl">Remaining</div>
+        </div>
+      </div>
+      <ul id="winnersList" class="winners-list"></ul>
+      <button id="exportBtn" class="btn-secondary">Export Winners</button>
+      <button id="resetBtn" class="btn-secondary">Reset All</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="label">— Today's Winner —</div>
+    <div class="gold-line"></div>
+    <div class="winner-name" id="modalName"></div>
+    <div class="meta" id="modalMeta"></div>
+    <button id="modalClose">CLOSE</button>
+  </div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'romanticTourWheel.v1';
+  const SLICE_PALETTE = ['#922933', '#1A0606', '#5e1a21', '#0F0F0F'];
+  const TOUR_CITIES = [
+    'Las Vegas, NV', 'Phoenix, AZ', 'Dallas, TX', 'Houston, TX',
+    'Atlanta, GA', 'Charlotte, NC', 'Washington, DC', 'Nashville, TN',
+    'Detroit, MI', 'Minneapolis, MN', 'Chicago, IL', 'Columbus, OH',
+    'Toronto, ON', 'Paris, FR', 'Berlin, DE', 'Amsterdam, NL',
+    'Madrid, ES', 'Milan, IT', 'London, UK', 'New York, NY',
+    'Pittsburgh, PA', 'Philadelphia, PA', 'Boston, MA', 'Indianapolis, IN',
+    'Tampa, FL', 'New Orleans, LA', 'Miami, FL', 'San Antonio, TX',
+    'Colorado Springs, CO', 'Los Angeles, CA', 'San Francisco, CA', 'Vancouver, BC'
+  ];
+
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const SIZE = canvas.width;
+  const CX = SIZE / 2;
+  const CY = SIZE / 2;
+  const R = SIZE / 2 - 12;
+
+  let state = loadState();
+  let rotation = 0;
+  let spinning = false;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return {
+          entries: Array.isArray(parsed.entries) ? parsed.entries : [],
+          winners: Array.isArray(parsed.winners) ? parsed.winners : [],
+          lastSpin: parsed.lastSpin || null,
+        };
+      }
+    } catch (e) {}
+    return { entries: [], winners: [], lastSpin: null };
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function todayKey() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function drawWheel() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    const entries = state.entries;
+
+    if (entries.length === 0) {
+      ctx.beginPath();
+      ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.fillStyle = '#1A0606';
+      ctx.fill();
+      ctx.strokeStyle = '#922933';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#666';
+      ctx.font = "italic 16px 'Playfair Display'";
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Add entries to begin', CX, CY);
+      return;
+    }
+
+    const sliceAngle = (Math.PI * 2) / entries.length;
+
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(rotation);
+
+    entries.forEach((name, i) => {
+      const start = i * sliceAngle;
+      const end = start + sliceAngle;
+
+      // Slice fill
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, R, start, end);
+      ctx.closePath();
+      ctx.fillStyle = SLICE_PALETTE[i % SLICE_PALETTE.length];
+      ctx.fill();
+
+      // Slice divider
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Label
+      ctx.save();
+      ctx.rotate(start + sliceAngle / 2);
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      const fontSize = Math.max(10, Math.min(17, 320 / entries.length));
+      ctx.font = `500 ${fontSize}px Inter`;
+      const maxChars = Math.max(8, Math.floor(28 - entries.length * 0.4));
+      const text = name.length > maxChars ? name.slice(0, maxChars - 1) + '…' : name;
+      ctx.fillText(text, R - 18, 0);
+      ctx.restore();
+    });
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(0, 0, R, 0, Math.PI * 2);
+    ctx.strokeStyle = '#922933';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Inner accent ring
+    ctx.beginPath();
+    ctx.arc(0, 0, R - 3, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(146,41,51,0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function renderEntries() {
+    document.getElementById('entriesInput').value = state.entries.join('\n');
+  }
+
+  function renderWinners() {
+    const ul = document.getElementById('winnersList');
+    ul.innerHTML = '';
+    document.getElementById('statWinners').textContent = state.winners.length;
+    document.getElementById('statRemaining').textContent = state.entries.length;
+
+    if (state.winners.length === 0) {
+      ul.innerHTML = '<li class="empty">No winners yet</li>';
+      return;
+    }
+    [...state.winners].reverse().forEach((w, i) => {
+      const idx = state.winners.length - i;
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span class="left">
+          <span class="num">${String(idx).padStart(2, '0')}</span>
+          <span class="name">${escapeHtml(w.name)}</span>
+        </span>
+        <span class="date">${formatDate(w.date)}</span>
+      `;
+      ul.appendChild(li);
+    });
+  }
+
+  function updateSpinAvailability() {
+    const status = document.getElementById('dailyStatus');
+    const btn = document.getElementById('spinBtn');
+    if (state.entries.length === 0) {
+      status.classList.remove('show');
+      btn.disabled = true;
+      return;
+    }
+    if (state.lastSpin === todayKey()) {
+      status.textContent = "TODAY'S SPIN COMPLETE — RETURN TOMORROW";
+      status.classList.add('show');
+      btn.disabled = true;
+      return;
+    }
+    status.classList.remove('show');
+    btn.disabled = false;
+  }
+
+  function spin() {
+    if (spinning || state.entries.length === 0) return;
+    if (state.lastSpin === todayKey()) return;
+
+    spinning = true;
+    document.getElementById('spinBtn').disabled = true;
+
+    const sliceAngle = (Math.PI * 2) / state.entries.length;
+    const winnerIdx = Math.floor(Math.random() * state.entries.length);
+
+    // Pointer is at angle 0 (right side). Winning slice center after rotation
+    // should equal 0 (mod 2π). Slice center in local coords = winnerIdx*slice + slice/2.
+    // Add small random offset so it doesn't always land dead-center.
+    const jitter = (Math.random() - 0.5) * sliceAngle * 0.7;
+    const targetSliceCenter = winnerIdx * sliceAngle + sliceAngle / 2 + jitter;
+    const fullSpins = 6 + Math.random() * 3;
+    const TWO_PI = Math.PI * 2;
+    const currentMod = ((rotation % TWO_PI) + TWO_PI) % TWO_PI;
+    const desiredMod = ((-targetSliceCenter % TWO_PI) + TWO_PI) % TWO_PI;
+    let delta = desiredMod - currentMod;
+    if (delta < 0) delta += TWO_PI;
+    const finalRotation = rotation + fullSpins * TWO_PI + delta;
+
+    const duration = 5500;
+    const startTime = performance.now();
+    const startRot = rotation;
+
+    function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+    function frame(now) {
+      const t = Math.min((now - startTime) / duration, 1);
+      rotation = startRot + (finalRotation - startRot) * easeOut(t);
+      drawWheel();
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        rotation = finalRotation;
+        drawWheel();
+        spinning = false;
+        recordWinner(winnerIdx);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function recordWinner(idx) {
+    const name = state.entries[idx];
+    state.entries.splice(idx, 1);
+    state.winners.push({ name, date: new Date().toISOString() });
+    state.lastSpin = todayKey();
+    saveState();
+    renderEntries();
+    renderWinners();
+    showWinnerModal(name);
+    fireConfetti();
+    setTimeout(() => {
+      rotation = 0;
+      drawWheel();
+      updateSpinAvailability();
+    }, 800);
+  }
+
+  function showWinnerModal(name) {
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalMeta').textContent =
+      `WIN #${String(state.winners.length).padStart(2, '0')} · ${formatDate(new Date().toISOString())}`;
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function fireConfetti() {
+    const root = document.getElementById('confetti');
+    root.innerHTML = '';
+    const colors = ['#922933', '#b8333f', '#ffffff', '#5e1a21', '#d4af37'];
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('span');
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.background = colors[Math.floor(Math.random() * colors.length)];
+      s.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+      s.style.animationDelay = Math.random() * 0.4 + 's';
+      s.style.transform = `rotate(${Math.random() * 360}deg)`;
+      s.style.opacity = (0.7 + Math.random() * 0.3).toString();
+      root.appendChild(s);
+    }
+    setTimeout(() => { root.innerHTML = ''; }, 5000);
+  }
+
+  function exportWinners() {
+    if (state.winners.length === 0) {
+      alert('No winners to export yet.');
+      return;
+    }
+    const lines = ['#,Name,Date'];
+    state.winners.forEach((w, i) => {
+      const safe = `"${String(w.name).replace(/"/g, '""')}"`;
+      lines.push(`${i + 1},${safe},${formatDate(w.date)}`);
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `winners-${todayKey()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Wire up
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const text = document.getElementById('entriesInput').value;
+    state.entries = text.split('\n').map(s => s.trim()).filter(Boolean);
+    saveState();
+    rotation = 0;
+    drawWheel();
+    renderWinners();
+    updateSpinAvailability();
+  });
+
+  document.getElementById('loadCitiesBtn').addEventListener('click', () => {
+    if (state.entries.length > 0 && !confirm('Replace current entries with the 32 tour cities?')) return;
+    state.entries = [...TOUR_CITIES];
+    saveState();
+    renderEntries();
+    rotation = 0;
+    drawWheel();
+    renderWinners();
+    updateSpinAvailability();
+  });
+
+  document.getElementById('spinBtn').addEventListener('click', spin);
+
+  document.getElementById('modalClose').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('show');
+  });
+
+  document.getElementById('exportBtn').addEventListener('click', exportWinners);
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (!confirm('Clear entries, winners, and the daily-spin lock?')) return;
+    state = { entries: [], winners: [], lastSpin: null };
+    saveState();
+    renderEntries();
+    renderWinners();
+    rotation = 0;
+    drawWheel();
+    updateSpinAvailability();
+  });
+
+  // Initial render
+  renderEntries();
+  renderWinners();
+  drawWheel();
+  updateSpinAvailability();
+})();
+</script>
+</body>
+</html>
