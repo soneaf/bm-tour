@@ -333,7 +333,6 @@
       <div id="dailyStatus" class="daily-status"></div>
       <textarea id="entriesInput" placeholder="One name per line"></textarea>
       <button id="saveBtn" class="btn-secondary">Save Entries</button>
-      <button id="loadCitiesBtn" class="btn-secondary">Load Tour Cities</button>
     </div>
 
     <div class="wheel-stage">
@@ -380,16 +379,6 @@
 (() => {
   const STORAGE_KEY = 'romanticTourWheel.v1';
   const SLICE_PALETTE = ['#922933', '#1A0606', '#5e1a21', '#0F0F0F'];
-  const TOUR_CITIES = [
-    'Las Vegas, NV', 'Phoenix, AZ', 'Dallas, TX', 'Houston, TX',
-    'Atlanta, GA', 'Charlotte, NC', 'Washington, DC', 'Nashville, TN',
-    'Detroit, MI', 'Minneapolis, MN', 'Chicago, IL', 'Columbus, OH',
-    'Toronto, ON', 'Paris, FR', 'Berlin, DE', 'Amsterdam, NL',
-    'Madrid, ES', 'Milan, IT', 'London, UK', 'New York, NY',
-    'Pittsburgh, PA', 'Philadelphia, PA', 'Boston, MA', 'Indianapolis, IN',
-    'Tampa, FL', 'New Orleans, LA', 'Miami, FL', 'San Antonio, TX',
-    'Colorado Springs, CO', 'Los Angeles, CA', 'San Francisco, CA', 'Vancouver, BC'
-  ];
 
   const canvas = document.getElementById('wheel');
   const ctx = canvas.getContext('2d');
@@ -666,17 +655,6 @@
     const text = document.getElementById('entriesInput').value;
     state.entries = text.split('\n').map(s => s.trim()).filter(Boolean);
     saveState();
-    rotation = 0;
-    drawWheel();
-    renderWinners();
-    updateSpinAvailability();
-  });
-
-  document.getElementById('loadCitiesBtn').addEventListener('click', () => {
-    if (state.entries.length > 0 && !confirm('Replace current entries with the 32 tour cities?')) return;
-    state.entries = [...TOUR_CITIES];
-    saveState();
-    renderEntries();
     rotation = 0;
     drawWheel();
     renderWinners();
