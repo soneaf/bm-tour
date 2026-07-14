@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bruno Mars — The Romantic Tour 2026 · Travel Party</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0A0A0A;
+    font-family: 'Inter', sans-serif;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .page {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 24px 60px;
+  }
+
+  .title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 56px 0 8px;
+    gap: 8px;
+  }
+  .title-block h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: 1;
+  }
+  .gold-line { width: 60px; height: 1px; background: #922933; }
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #922933;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 28px 0 8px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    letter-spacing: 0.06em;
+    color: #FFFFFF;
+    line-height: 1;
+  }
+  .stat .label {
+    font-size: 10px;
+    font-weight: 300;
+    color: #888888;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    padding: 36px 0 20px;
+    gap: 16px;
+  }
+  .section-header .line { flex: 1; height: 1px; background: #333333; }
+  .section-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #922933;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 18px;
+  }
+  .controls input[type="search"] {
+    flex: 1 1 240px;
+    background: #141414;
+    border: 1px solid #2A2A2A;
+    border-radius: 4px;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .controls input[type="search"]::placeholder { color: #666666; }
+  .controls input[type="search"]:focus { border-color: #922933; }
+  .controls select {
+    background: #141414;
+    border: 1px solid #2A2A2A;
+    border-radius: 4px;
+    color: #CCCCCC;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    padding: 10px 12px;
+    outline: none;
+    cursor: pointer;
+    max-width: 240px;
+    transition: border-color 0.15s;
+  }
+  .controls select:focus { border-color: #922933; }
+  .controls button {
+    background: transparent;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    color: #888888;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .controls button:hover { color: #FFFFFF; border-color: #922933; }
+
+  .result-count {
+    font-size: 11px;
+    font-weight: 300;
+    color: #666666;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+  }
+  .result-count strong { color: #922933; font-weight: 500; }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid #1A1A1A;
+    border-radius: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 820px;
+  }
+  thead th {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: #888888;
+    text-align: left;
+    padding: 14px 16px;
+    background: #111111;
+    border-bottom: 1px solid #2A2A2A;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: color 0.15s;
+    position: sticky;
+    top: 0;
+  }
+  thead th:hover { color: #FFFFFF; }
+  thead th.sorted { color: #922933; }
+  thead th .arrow { font-family: 'Inter', sans-serif; font-size: 10px; margin-left: 6px; }
+  tbody td {
+    font-size: 13px;
+    font-weight: 300;
+    color: #CCCCCC;
+    padding: 12px 16px;
+    border-bottom: 1px solid #1A1A1A;
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #131313; }
+  td.name { font-weight: 500; color: #FFFFFF; }
+  td.job { color: #AAAAAA; }
+  .no-results {
+    text-align: center;
+    padding: 48px 16px !important;
+    color: #666666;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    white-space: normal !important;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 0 0;
+    gap: 14px;
+  }
+  .footer .disclaimer {
+    font-size: 10px;
+    font-weight: 300;
+    color: #444444;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .title-block h1 { font-size: 38px; }
+    .stats { gap: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="title-block">
+    <h1>TRAVEL PARTY</h1>
+    <div class="gold-line"></div>
+    <p class="subtitle">The Romantic Tour · 2026 World Tour</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="stat-total">66</div><div class="label">Party Members</div></div>
+    <div class="stat"><div class="num" id="stat-countries">6</div><div class="label">Citizenships</div></div>
+    <div class="stat"><div class="num" id="stat-roles">33</div><div class="label">Roles</div></div>
+  </div>
+
+  <div class="section-header">
+    <div class="line"></div>
+    <h2>PERSONNEL MANIFEST</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="controls">
+    <input type="search" id="search" placeholder="Search name, role…" autocomplete="off">
+    <select id="filter-country"><option value="">All Citizenships</option></select>
+    <select id="filter-job"><option value="">All Roles</option></select>
+    <button id="clear">Clear</button>
+  </div>
+
+  <div class="result-count" id="count">Showing <strong>66</strong> of 66 party members</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-key="last">Last Name<span class="arrow"></span></th>
+          <th data-key="first">First Name<span class="arrow"></span></th>
+          <th data-key="dob">Date of Birth<span class="arrow"></span></th>
+          <th data-key="country">Citizenship<span class="arrow"></span></th>
+          <th data-key="job">Job Title<span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr>
+          <td class="name">Advall</td>
+          <td>Simon</td>
+          <td>10-Oct-2001</td>
+          <td>Swedish</td>
+          <td class="job">Pyro Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Andreasen</td>
+          <td>Brandon</td>
+          <td>4-May-1981</td>
+          <td>United States Of America</td>
+          <td class="job">Audio Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Bassham</td>
+          <td>Brian</td>
+          <td>29-Nov-1972</td>
+          <td>United States Of America</td>
+          <td class="job">Production Stage Manager</td>
+        </tr>
+        <tr>
+          <td class="name">Begin-Leblanc</td>
+          <td>Xavier</td>
+          <td>17-Apr-1991</td>
+          <td>Canadian</td>
+          <td class="job">Video Servers</td>
+        </tr>
+        <tr>
+          <td class="name">Berino</td>
+          <td>Catherine</td>
+          <td>19-Feb-1981</td>
+          <td>United States Of America</td>
+          <td class="job">Merchandise Coordinator</td>
+        </tr>
+        <tr>
+          <td class="name">Blohm</td>
+          <td>Daniel</td>
+          <td>6-May-1996</td>
+          <td>United States Of America</td>
+          <td class="job">Automation</td>
+        </tr>
+        <tr>
+          <td class="name">Bouck</td>
+          <td>Jonathan</td>
+          <td>16-Aug-1982</td>
+          <td>United States Of America</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Bowers</td>
+          <td>Jason</td>
+          <td>4-Sep-1987</td>
+          <td>United States Of America</td>
+          <td class="job">Drum Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Brackett</td>
+          <td>Paul</td>
+          <td>30-Aug-1985</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Bruno</td>
+          <td>Lisa</td>
+          <td>7-Oct-1976</td>
+          <td>United States Of America</td>
+          <td class="job">Wardrobe / Stylist</td>
+        </tr>
+        <tr>
+          <td class="name">Callan</td>
+          <td>David</td>
+          <td>21-Aug-1990</td>
+          <td>United States Of America</td>
+          <td class="job">Automation</td>
+        </tr>
+        <tr>
+          <td class="name">Caples</td>
+          <td>Jacob</td>
+          <td>25-Jan-1993</td>
+          <td>United States Of America</td>
+          <td class="job">Audio / Sound Engineer</td>
+        </tr>
+        <tr>
+          <td class="name">Castaneda</td>
+          <td>Cameron</td>
+          <td>1-Apr-2003</td>
+          <td>United States Of America</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Castriota</td>
+          <td>Ricardo</td>
+          <td>3-Jul-1976</td>
+          <td>United States Of America</td>
+          <td class="job">Rigger</td>
+        </tr>
+        <tr>
+          <td class="name">Cockrell</td>
+          <td>David</td>
+          <td>6-Jul-1972</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Cordova</td>
+          <td>Alan</td>
+          <td>27-Jun-1991</td>
+          <td>United States Of America</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Cromwell</td>
+          <td>Trevitt</td>
+          <td>17-Dec-1973</td>
+          <td>United States Of America</td>
+          <td class="job">Automation</td>
+        </tr>
+        <tr>
+          <td class="name">Curcie</td>
+          <td>Zackariha</td>
+          <td>7-Feb-1989</td>
+          <td>United States Of America</td>
+          <td class="job">Electrician</td>
+        </tr>
+        <tr>
+          <td class="name">Dehn</td>
+          <td>Jeremy</td>
+          <td>7-Jul-1992</td>
+          <td>Australian</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Domandski</td>
+          <td>David</td>
+          <td>27-Jun-1964</td>
+          <td>Canadian</td>
+          <td class="job">Pyro Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Duran</td>
+          <td>Nikoles</td>
+          <td>30-Jan-1998</td>
+          <td>United States Of America</td>
+          <td class="job">Camera Operator</td>
+        </tr>
+        <tr>
+          <td class="name">Fatone</td>
+          <td>Steven</td>
+          <td>15-Oct-1974</td>
+          <td>United States Of America</td>
+          <td class="job">Video Director</td>
+        </tr>
+        <tr>
+          <td class="name">Forman</td>
+          <td>Joel</td>
+          <td>15-Dec-1977</td>
+          <td>United States Of America</td>
+          <td class="job">Production Manager</td>
+        </tr>
+        <tr>
+          <td class="name">Fournier</td>
+          <td>Frédéric</td>
+          <td>14-Nov-1972</td>
+          <td>Canadian</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Lunsford</td>
+          <td>Daniel</td>
+          <td>23-Nov-1996</td>
+          <td>United States Of America</td>
+          <td class="job">Pyro Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Main</td>
+          <td>Abram</td>
+          <td>21-Apr-1990</td>
+          <td>United States Of America</td>
+          <td class="job">Camera Operator</td>
+        </tr>
+        <tr>
+          <td class="name">Martinez</td>
+          <td>Jose</td>
+          <td>11-Feb-1998</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Martinez Jr</td>
+          <td>Ruben</td>
+          <td>26-Jun-1991</td>
+          <td>United States Of America</td>
+          <td class="job">Automation</td>
+        </tr>
+        <tr>
+          <td class="name">Maull</td>
+          <td>Whitney</td>
+          <td>17-May-1984</td>
+          <td>United States Of America</td>
+          <td class="job">Keyboard Tech</td>
+        </tr>
+        <tr>
+          <td class="name">Mayes</td>
+          <td>Jeffrey</td>
+          <td>8-May-1973</td>
+          <td>United States Of America</td>
+          <td class="job">Guitar Tech</td>
+        </tr>
+        <tr>
+          <td class="name">Mc Kim</td>
+          <td>Donald</td>
+          <td>19-Jan-1966</td>
+          <td>United States Of America</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">McConville</td>
+          <td>Kevin</td>
+          <td>20-Feb-1985</td>
+          <td>United States Of America</td>
+          <td class="job">Rigger</td>
+        </tr>
+        <tr>
+          <td class="name">McLaughlin</td>
+          <td>Daniel</td>
+          <td>28-Jun-1988</td>
+          <td>United States Of America</td>
+          <td class="job">Automation</td>
+        </tr>
+        <tr>
+          <td class="name">Medrano</td>
+          <td>David</td>
+          <td>16-Aug-1968</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Melton</td>
+          <td>Charles</td>
+          <td>23-Sep-1963</td>
+          <td>United States Of America</td>
+          <td class="job">Rigging</td>
+        </tr>
+        <tr>
+          <td class="name">Mills</td>
+          <td>Amy</td>
+          <td>25-Feb-1977</td>
+          <td>United States Of America</td>
+          <td class="job">Catering Coordinator</td>
+        </tr>
+        <tr>
+          <td class="name">Moniz</td>
+          <td>Charles</td>
+          <td>31-Oct-1980</td>
+          <td>Canadian</td>
+          <td class="job">Engineer</td>
+        </tr>
+        <tr>
+          <td class="name">Moore</td>
+          <td>Timothy</td>
+          <td>4-Jun-1995</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Mundrick</td>
+          <td>Paul</td>
+          <td>21-Oct-1972</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Nelson</td>
+          <td>Mike</td>
+          <td>8-Aug-1974</td>
+          <td>New Zealand</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Nguyen</td>
+          <td>Andy</td>
+          <td>28-Dec-1991</td>
+          <td>United States Of America</td>
+          <td class="job">Camera Operator</td>
+        </tr>
+        <tr>
+          <td class="name">Oliva</td>
+          <td>Christopher</td>
+          <td>15-Nov-1995</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Payton</td>
+          <td>Christopher</td>
+          <td>1-Nov-1988</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Pearson</td>
+          <td>Gregg</td>
+          <td>7-Nov-1979</td>
+          <td>Canadian</td>
+          <td class="job">Pyro Shooter</td>
+        </tr>
+        <tr>
+          <td class="name">Poje</td>
+          <td>Thomas</td>
+          <td>18-Jun-1989</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Popowycz</td>
+          <td>John</td>
+          <td>20-Dec-1968</td>
+          <td>Canadian</td>
+          <td class="job">Lasers</td>
+        </tr>
+        <tr>
+          <td class="name">Reyes</td>
+          <td>Reynaldo</td>
+          <td>8-Dec-1976</td>
+          <td>United States Of America</td>
+          <td class="job">Video</td>
+        </tr>
+        <tr>
+          <td class="name">Rice</td>
+          <td>Krystena</td>
+          <td>28-Jul-1972</td>
+          <td>United States Of America</td>
+          <td class="job">Video Crew Chief</td>
+        </tr>
+        <tr>
+          <td class="name">Roach</td>
+          <td>James</td>
+          <td>2-Dec-1982</td>
+          <td>United States Of America</td>
+          <td class="job">Monitor Engineer</td>
+        </tr>
+        <tr>
+          <td class="name">Romoff</td>
+          <td>Andrew</td>
+          <td>4-Nov-1994</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Sandon</td>
+          <td>Cole</td>
+          <td>29-Oct-2001</td>
+          <td>United States Of America</td>
+          <td class="job">Pyro Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Schilling</td>
+          <td>Travis</td>
+          <td>21-Jun-1998</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Senior</td>
+          <td>Andrew</td>
+          <td>8-Dec-1990</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Sobkowiak</td>
+          <td>Richard</td>
+          <td>19-Jun-1974</td>
+          <td>United States Of America</td>
+          <td class="job">Live Nation Representative</td>
+        </tr>
+        <tr>
+          <td class="name">Starbuck</td>
+          <td>Spencer</td>
+          <td>10-Aug-2006</td>
+          <td>United States Of America</td>
+          <td class="job">Carpenter</td>
+        </tr>
+        <tr>
+          <td class="name">Sullivan</td>
+          <td>Sean</td>
+          <td>18-Sep-1970</td>
+          <td>United States Of America</td>
+          <td class="job">Foh Audio Sound Engineer</td>
+        </tr>
+        <tr>
+          <td class="name">Taylor</td>
+          <td>Eric</td>
+          <td>4-Mar-1984</td>
+          <td>United States Of America</td>
+          <td class="job">Lasers</td>
+        </tr>
+        <tr>
+          <td class="name">Taylor III</td>
+          <td>Robert</td>
+          <td>11-Jan-1973</td>
+          <td>United States Of America</td>
+          <td class="job">Pa Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Tierney</td>
+          <td>Thomas</td>
+          <td>13-Jan-1964</td>
+          <td>United States Of America</td>
+          <td class="job">Site Coordinator</td>
+        </tr>
+        <tr>
+          <td class="name">Tobey</td>
+          <td>Paul</td>
+          <td>17-May-1978</td>
+          <td>United States Of America</td>
+          <td class="job">Rf Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Vargas</td>
+          <td>Juan</td>
+          <td>2-Oct-1972</td>
+          <td>United States Of America</td>
+          <td class="job">Security</td>
+        </tr>
+        <tr>
+          <td class="name">Velasquez</td>
+          <td>Juan</td>
+          <td>27-Dec-1993</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Velazquez</td>
+          <td>Jorge</td>
+          <td>2-Aug-1977</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Crew Chief</td>
+        </tr>
+        <tr>
+          <td class="name">Vuylsteke</td>
+          <td>Laurent</td>
+          <td>18-Mar-1974</td>
+          <td>Belgium</td>
+          <td class="job">Electrician</td>
+        </tr>
+        <tr>
+          <td class="name">Wells</td>
+          <td>William</td>
+          <td>29-Jun-1988</td>
+          <td>United States Of America</td>
+          <td class="job">Pyro Technician</td>
+        </tr>
+        <tr>
+          <td class="name">Williams</td>
+          <td>Bryson</td>
+          <td>23-Mar-1985</td>
+          <td>United States Of America</td>
+          <td class="job">Lighting Technician</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <div class="gold-line"></div>
+    <p class="disclaimer">Confidential — travel party manifest · brunomars.com</p>
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+  ["Advall","Simon","10-Oct-2001","SWEDISH","PYRO technician"],
+  ["Andreasen","Brandon","4-May-1981","UNITED STATES OF AMERICA","Audio technician"],
+  ["Bassham","Brian","29-Nov-1972","UNITED STATES OF AMERICA","Production stage manager"],
+  ["Begin-Leblanc","Xavier","17-Apr-1991","CANADIAN","Video servers"],
+  ["Berino","Catherine","19-Feb-1981","UNITED STATES OF AMERICA","Merchandise Coordinator"],
+  ["Blohm","Daniel","6-May-1996","UNITED STATES OF AMERICA","Automation"],
+  ["Bouck","Jonathan","16-Aug-1982","UNITED STATES OF AMERICA","Video"],
+  ["Bowers","Jason","4-Sep-1987","UNITED STATES OF AMERICA","Drum Technician"],
+  ["Brackett","Paul","30-Aug-1985","UNITED STATES OF AMERICA","Carpenter"],
+  ["Bruno","Lisa","7-Oct-1976","UNITED STATES OF AMERICA","Wardrobe / Stylist"],
+  ["Callan","David","21-Aug-1990","UNITED STATES OF AMERICA","Automation"],
+  ["Caples","Jacob","25-Jan-1993","UNITED STATES OF AMERICA","Audio / Sound engineer"],
+  ["Castaneda","Cameron","1-Apr-2003","UNITED STATES OF AMERICA","Video"],
+  ["Castriota","Ricardo","3-Jul-1976","UNITED STATES OF AMERICA","Rigger"],
+  ["Cordova","Alan","27-Jun-1991","UNITED STATES OF AMERICA","Video"],
+  ["Cockrell","David","6-Jul-1972","UNITED STATES OF AMERICA","Carpenter"],
+  ["Cromwell","Trevitt","17-Dec-1973","UNITED STATES OF AMERICA","Automation"],
+  ["Curcie","Zackariha","7-Feb-1989","UNITED STATES OF AMERICA","Electrician"],
+  ["Dehn","Jeremy","7-Jul-1992","AUSTRALIAN","Lighting technician"],
+  ["Domandski","David","27-Jun-1964","CANADIAN","PYRO technician"],
+  ["Duran","Nikoles","30-Jan-1998","UNITED STATES OF AMERICA","Camera operator"],
+  ["Fatone","Steven","15-Oct-1974","UNITED STATES OF AMERICA","Video director"],
+  ["Forman","Joel","15-Dec-1977","UNITED STATES OF AMERICA","Production manager"],
+  ["Fournier","Frédéric","14-Nov-1972","CANADIAN","Video"],
+  ["Lunsford","Daniel","23-Nov-1996","UNITED STATES OF AMERICA","PYRO technician"],
+  ["Main","Abram","21-Apr-1990","UNITED STATES OF AMERICA","camera operator"],
+  ["Martinez Jr","Ruben","26-Jun-1991","UNITED STATES OF AMERICA","Automation"],
+  ["Martinez","Jose","11-Feb-1998","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Maull","Whitney","17-May-1984","UNITED STATES OF AMERICA","keyboard tech"],
+  ["Mayes","Jeffrey","8-May-1973","UNITED STATES OF AMERICA","guitar tech"],
+  ["McConville","Kevin","20-Feb-1985","UNITED STATES OF AMERICA","Rigger"],
+  ["Mc Kim","Donald","19-Jan-1966","UNITED STATES OF AMERICA","Video"],
+  ["McLaughlin","Daniel","28-Jun-1988","UNITED STATES OF AMERICA","Automation"],
+  ["Medrano","David","16-Aug-1968","UNITED STATES OF AMERICA","Carpenter"],
+  ["Melton","Charles","23-Sep-1963","UNITED STATES OF AMERICA","Rigging"],
+  ["Mills","Amy","25-Feb-1977","UNITED STATES OF AMERICA","catering coordinator"],
+  ["Moniz","Charles","31-Oct-1980","CANADIAN","Engineer"],
+  ["Moore","Timothy","4-Jun-1995","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Mundrick","Paul","21-Oct-1972","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Nelson","Mike","8-Aug-1974","NEW ZEALAND","Video"],
+  ["Nguyen","Andy","28-Dec-1991","UNITED STATES OF AMERICA","camera operator"],
+  ["Oliva","Christopher","15-Nov-1995","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Payton","Christopher","1-Nov-1988","UNITED STATES OF AMERICA","Carpenter"],
+  ["Pearson","Gregg","7-Nov-1979","CANADIAN","Pyro shooter"],
+  ["Poje","Thomas","18-Jun-1989","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Popowycz","John","20-Dec-1968","CANADIAN","Lasers"],
+  ["Reyes","Reynaldo","8-Dec-1976","UNITED STATES OF AMERICA","Video"],
+  ["Rice","Krystena","28-Jul-1972","UNITED STATES OF AMERICA","video crew chief"],
+  ["Roach","James","2-Dec-1982","UNITED STATES OF AMERICA","monitor engineer"],
+  ["Romoff","Andrew","4-Nov-1994","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Sandon","Cole","29-Oct-2001","UNITED STATES OF AMERICA","pyro technician"],
+  ["Schilling","Travis","21-Jun-1998","UNITED STATES OF AMERICA","Carpenter"],
+  ["Senior","Andrew","8-Dec-1990","UNITED STATES OF AMERICA","Carpenter"],
+  ["Sobkowiak","Richard","19-Jun-1974","UNITED STATES OF AMERICA","Live Nation Representative"],
+  ["Starbuck","Spencer","10-Aug-2006","UNITED STATES OF AMERICA","Carpenter"],
+  ["Sullivan","Sean","18-Sep-1970","UNITED STATES OF AMERICA","FOH Audio Sound Engineer"],
+  ["Taylor III","Robert","11-Jan-1973","UNITED STATES OF AMERICA","PA technician"],
+  ["Taylor","Eric","4-Mar-1984","UNITED STATES OF AMERICA","Lasers"],
+  ["Tierney","Thomas","13-Jan-1964","UNITED STATES OF AMERICA","Site Coordinator"],
+  ["Tobey","Paul","17-May-1978","UNITED STATES OF AMERICA","RF technician"],
+  ["Vargas","Juan","2-Oct-1972","UNITED STATES OF AMERICA","security"],
+  ["Velasquez","Juan","27-Dec-1993","UNITED STATES OF AMERICA","Lighting technician"],
+  ["Velazquez","Jorge","2-Aug-1977","UNITED STATES OF AMERICA","lighting crew chief"],
+  ["Vuylsteke","Laurent","18-Mar-1974","BELGIUM","Electrician"],
+  ["Wells","William","29-Jun-1988","UNITED STATES OF AMERICA","PYRO technician"],
+  ["Williams","Bryson","23-Mar-1985","UNITED STATES OF AMERICA","Lighting technician"]
+];
+
+const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+
+function titleCase(s) {
+  return s.toLowerCase().replace(/(^|[\s\/-])\w/g, c => c.toUpperCase());
+}
+
+const people = DATA.map(r => {
+  const [d, m, y] = r[2].split("-");
+  return {
+    last: r[0], first: r[1], dob: r[2],
+    dobTime: new Date(+y, MONTHS[m], +d).getTime(),
+    country: r[3], job: r[4],
+    jobNorm: titleCase(r[4].trim()),
+    haystack: r.join(" ").toLowerCase()
+  };
+});
+
+const tbody = document.getElementById("tbody");
+const searchEl = document.getElementById("search");
+const countryEl = document.getElementById("filter-country");
+const jobEl = document.getElementById("filter-job");
+const countEl = document.getElementById("count");
+const headers = document.querySelectorAll("thead th");
+
+let sortKey = "last";
+let sortDir = 1;
+
+// Populate stats and filter dropdowns
+const countries = [...new Set(people.map(p => p.country))].sort();
+const jobs = [...new Set(people.map(p => p.jobNorm))].sort();
+document.getElementById("stat-total").textContent = people.length;
+document.getElementById("stat-countries").textContent = countries.length;
+document.getElementById("stat-roles").textContent = jobs.length;
+countries.forEach(c => countryEl.add(new Option(titleCase(c), c)));
+jobs.forEach(j => jobEl.add(new Option(j, j)));
+
+function currentRows() {
+  const q = searchEl.value.trim().toLowerCase();
+  const country = countryEl.value;
+  const job = jobEl.value;
+  let rows = people.filter(p =>
+    (!q || p.haystack.includes(q)) &&
+    (!country || p.country === country) &&
+    (!job || p.jobNorm === job)
+  );
+  rows.sort((a, b) => {
+    let va, vb;
+    if (sortKey === "dob") { va = a.dobTime; vb = b.dobTime; }
+    else if (sortKey === "job") { va = a.jobNorm; vb = b.jobNorm; }
+    else { va = a[sortKey]; vb = b[sortKey]; }
+    const cmp = typeof va === "number"
+      ? va - vb
+      : va.localeCompare(vb, undefined, { sensitivity: "base" });
+    return cmp * sortDir || a.last.localeCompare(b.last);
+  });
+  return rows;
+}
+
+function esc(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function render() {
+  const rows = currentRows();
+  countEl.innerHTML = `Showing <strong>${rows.length}</strong> of ${people.length} party members`;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="no-results">No party members match your search.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(p => `
+      <tr>
+        <td class="name">${esc(p.last)}</td>
+        <td>${esc(p.first)}</td>
+        <td>${esc(p.dob)}</td>
+        <td>${esc(titleCase(p.country))}</td>
+        <td class="job">${esc(p.jobNorm)}</td>
+      </tr>`).join("");
+  }
+  headers.forEach(th => {
+    const active = th.dataset.key === sortKey;
+    th.classList.toggle("sorted", active);
+    th.querySelector(".arrow").textContent = active ? (sortDir === 1 ? "▲" : "▼") : "";
+  });
+}
+
+headers.forEach(th => th.addEventListener("click", () => {
+  const key = th.dataset.key;
+  if (sortKey === key) sortDir *= -1;
+  else { sortKey = key; sortDir = 1; }
+  render();
+}));
+
+searchEl.addEventListener("input", render);
+countryEl.addEventListener("change", render);
+jobEl.addEventListener("change", render);
+document.getElementById("clear").addEventListener("click", () => {
+  searchEl.value = "";
+  countryEl.value = "";
+  jobEl.value = "";
+  sortKey = "last";
+  sortDir = 1;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
